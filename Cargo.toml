@@ -1,0 +1,6 @@
+[package]
+name = "cute"
+version = "0.1.0"
+authors = ["Matt Gathu <mattgathu@gmail.com>"]
+
+[dependencies]
