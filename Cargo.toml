@@ -5,7 +5,7 @@ authors = ["Matt Gathu <mattgathu@gmail.com>"]
 
 description = "macro for Python-esque comprehensions"
 
-documentation = ""
+documentation = "https://github.com/mattgathu/cute"
 homepage = "https://github.com/mattgathu/cute"
 repository = "https://github.com/mattgathu/cute"
 readme = "README.md"
