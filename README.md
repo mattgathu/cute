@@ -1,6 +1,8 @@
 # Cute
 
 [![Build Status](https://travis-ci.org/mattgathu/cute.svg?branch=master)](https://travis-ci.org/mattgathu/cute)
+[![Crates.io](https://img.shields.io/crates/v/cute.svg)](https://crates.io/crates/cute)
+[![License: MIT](https://img.shields.io/crates/l/cute.svg)](LICENSE)
 
 Macro for Python-esque list comprehensions in Rust.
 
