@@ -26,7 +26,7 @@
 //!
 //! # Examples
 //!
-//! Simpe comprehension
+//! Simple comprehension
 //!
 //! ```
 //! #[macro_use(c)]
