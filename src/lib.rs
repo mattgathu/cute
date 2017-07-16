@@ -1,7 +1,7 @@
 #![doc(html_logo_url = "https://raw.githubusercontent.com/mattgathu/cute/master/C!.png")]
-//! A Macro for python-esque list comprehensions in Rust
+//! A Macro for python-esque list and dictionary(hashmap) comprehensions in Rust
 //!
-//! The `c!` macro implements list comprehensions similar to those found in Python,
+//! The `c!` macro implements list and hashmap comprehensions similar to those found in Python,
 //! allowing for conditionals and nested comprehensions.
 //!
 //! # Python Syntax
@@ -109,6 +109,21 @@
 //! let squares: Vec<i32> = c![square(x), for x in vec];
 //! assert_eq!(squares, vec![16, 4, 0, 4, 16]);
 //! ```
+//!
+//! Simple Hashmap creation Comprehension
+//!
+//! ```
+//! let v = vec!["one", "two", "three"];
+//! let map = c![key, key.to_uppercase(), for key in v];
+//! let mut expected: HashMap<&str, String> = HashMap::new();
+//! expected.insert("one", String::from("ONE"));
+//! expected.insert("two", String::from("TWO"));
+//! expected.insert("three", String::from("THREE"));
+//!
+//! assert_eq!(map, expected);
+//! ```
+
+use std::collections::HashMap;
 
 #[macro_export]
 macro_rules! c {
@@ -161,6 +176,15 @@ macro_rules! c {
         }
     );
 
+    ($key:expr, $val:expr, for $i:ident in $iter:expr) => (
+        {
+            let mut map = HashMap::new();
+            for $i in $iter {
+                map.insert($key, $val);
+            }
+            map
+        }
+    );
 }
 
 
@@ -212,7 +236,6 @@ fn apply_function_comprehension() {
     assert_eq!(output, vec![4, 2, 0, 2, 4]);
 }
 
-
 #[test]
 fn apply_user_defined_function() {
     fn square(x:i32) -> i32 {
@@ -222,5 +245,18 @@ fn apply_user_defined_function() {
     let vec: Vec<i32> = vec![-4, -2, 0, 2, 4];
     let squares: Vec<i32> = c![square(x), for x in vec];
     assert_eq!(squares, vec![16, 4, 0, 4, 16]);
+
+}
+
+#[test]
+fn hashmap_comprehension() {
+    let v = vec!["one", "two", "three"];
+    let map = c![key, key.to_uppercase(), for key in v];
+    let mut expected: HashMap<&str, String> = HashMap::new();
+    expected.insert("one", String::from("ONE"));
+    expected.insert("two", String::from("TWO"));
+    expected.insert("three", String::from("THREE"));
+
+    assert_eq!(map, expected);
 
 }
