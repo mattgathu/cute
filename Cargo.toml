@@ -1,11 +1,11 @@
 [package]
 name = "cute"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["Matt Gathu <mattgathu@gmail.com>"]
 
 description = "A macro for Python-esque comprehensions"
 
-documentation = "https://github.com/mattgathu/cute"
+documentation = "https://docs.rs/cute"
 homepage = "https://github.com/mattgathu/cute"
 repository = "https://github.com/mattgathu/cute"
 readme = "README.md"
