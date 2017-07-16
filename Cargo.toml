@@ -3,7 +3,7 @@ name = "cute"
 version = "0.1.0"
 authors = ["Matt Gathu <mattgathu@gmail.com>"]
 
-description = "macro for Python-esque comprehensions"
+description = "A macro for Python-esque comprehensions"
 
 documentation = "https://github.com/mattgathu/cute"
 homepage = "https://github.com/mattgathu/cute"
@@ -14,6 +14,6 @@ categories = ["rust-patterns"]
 license = "MIT"
 
 [badges]
-travis-ci = { repository = "mattgathu/cute", branch = "master" }
+travis-ci = { repository = "mattgathu/cute"}
 
 [dependencies]
