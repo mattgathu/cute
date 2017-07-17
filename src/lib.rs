@@ -115,6 +115,27 @@
 //!
 //! assert_eq!(map, expected);
 //! ```
+//!
+//! ```
+//! // conditional hashmap comprehension
+//! let v: Vec<(&str, i32)> = vec![("one", 1), ("two", 2), ("three", 3)];
+//! let map = c! {key => val, for (key, val) in v, if val == 1 || val == 2};
+//!
+//! let mut expected: HashMap<&str, i32> = HashMap::new();
+//! expected.insert("one", 1);
+//! expected.insert("two", 2);
+//!
+//! assert_eq!(map, expected);
+//! ```
+//!
+//! ```
+//! // conditional hashmap comprehension from an Iterator
+//! let map = c! {*key => key*key, for key in vec![1,2].iter(), if *key % 2 == 0};
+//! let mut e: HashMap<i32, i32> = HashMap::new();
+//! e.insert(2, 4);
+//!
+//! assert_eq!(map, e);
+//! ```
 
 
 #[macro_export]
@@ -179,12 +200,38 @@ macro_rules! c {
         }
     );
 
+    ($key:expr => $val:expr, for $p:pat in $iter:expr, if $cond:expr) => (
+        {
+            use std::collections::HashMap;
+            let mut map = HashMap::new();
+            for $p in $iter {
+                if $cond {
+                    map.insert($key, $val);
+                }
+            }
+            map
+        }
+    );
+
     ($key:expr => $val:expr, for $i:ident in $iter:expr) => (
         {
             use std::collections::HashMap;
             let mut map = HashMap::new();
             for $i in $iter {
                 map.insert($key, $val);
+            }
+            map
+        }
+    );
+
+    ($key:expr => $val:expr, for $i:ident in $iter:expr, if $cond:expr) => (
+        {
+            use std::collections::HashMap;
+            let mut map = HashMap::new();
+            for $i in $iter {
+                if $cond {
+                    map.insert($key, $val);
+                }
             }
             map
         }
@@ -292,7 +339,7 @@ mod tests {
 
 
     #[test]
-    fn hashmap_comprehension_four() {
+    fn hashmap_tuple_comprehension() {
         let v: Vec<(&str, i32)> = vec![("one", 1), ("two", 2), ("three", 3)];
         let map = c! {key => val, for (key, val) in v};
 
@@ -300,6 +347,18 @@ mod tests {
         expected.insert("one", 1);
         expected.insert("two", 2);
         expected.insert("three", 3);
+
+        assert_eq!(map, expected);
+    }
+
+    #[test]
+    fn conditional_hashmap_tuple_comprehension() {
+        let v: Vec<(&str, i32)> = vec![("one", 1), ("two", 2), ("three", 3)];
+        let map = c! {key => val, for (key, val) in v, if val == 1 || val == 2};
+
+        let mut expected: HashMap<&str, i32> = HashMap::new();
+        expected.insert("one", 1);
+        expected.insert("two", 2);
 
         assert_eq!(map, expected);
     }
@@ -315,11 +374,31 @@ mod tests {
     }
 
     #[test]
+    fn conditional_hashmap_from_iter() {
+        let map = c! {*key => key*key, for key in vec![1,2].iter(), if *key % 2 == 0};
+        let mut e: HashMap<i32, i32> = HashMap::new();
+        e.insert(2, 4);
+
+        assert_eq!(map, e);
+    }
+
+    #[test]
     fn hashmap_from_range() {
         let map = c! {key => key*key, for key in 1..3};
         let mut e: HashMap<i32, i32> = HashMap::new();
         e.insert(1, 1);
         e.insert(2, 4);
+
+        assert_eq!(map, e);
+    }
+
+    #[test]
+    fn conditional_hashmap_from_range() {
+        let map = c! {key => key*key, for key in 1..6, if key % 2 == 1};
+        let mut e: HashMap<i32, i32> = HashMap::new();
+        e.insert(1, 1);
+        e.insert(3, 9);
+        e.insert(5, 25);
 
         assert_eq!(map, e);
     }
