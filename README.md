@@ -109,7 +109,7 @@ let squares_hashmap = c!{key => key*key, for key in 0..10};
 
 ```rust
 // hashmap comprehension from an Iterator
-// NOTE: we have perform dereferencing.. *key
+// NOTE: we have to perform dereferencing: *key
 
 let map = c!{*key => key*key, for key in vec![1,2].iter()};
 
