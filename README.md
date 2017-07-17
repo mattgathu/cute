@@ -7,7 +7,7 @@
 
 Macro for Python-esque list comprehensions in Rust.
 
- The `c!` macro implements list comprehensions similar to those found in Python,
+ The `c!` macro implements list and hashmap comprehensions similar to those found in Python,
  allowing for conditionals and nested comprehensions.
 
  # Python Syntax
