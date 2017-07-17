@@ -15,5 +15,6 @@ license = "MIT"
 
 [badges]
 travis-ci = { repository = "mattgathu/cute"}
+appveyor = { repository = "mattgathu/cute"}
 
 [dependencies]
