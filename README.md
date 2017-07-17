@@ -1,6 +1,7 @@
 # Cute
 
 [![Build Status](https://travis-ci.org/mattgathu/cute.svg?branch=master)](https://travis-ci.org/mattgathu/cute)
+[![Build status](https://ci.appveyor.com/api/projects/status/pt592bgkx2mkt56m?svg=true)](https://ci.appveyor.com/project/mattgathu/cute)
 [![Crates.io](https://img.shields.io/crates/v/cute.svg)](https://crates.io/crates/cute)
 [![License: MIT](https://img.shields.io/crates/l/cute.svg)](LICENSE)
 
