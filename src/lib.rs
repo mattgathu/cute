@@ -135,7 +135,6 @@
 //! assert_eq!(map, expected);
 //! ```
 
-use std::collections::HashMap;
 
 #[macro_export]
 macro_rules! c {
@@ -190,6 +189,7 @@ macro_rules! c {
 
     ($key:expr => $val:expr, for $p:pat in $iter:expr) => (
         {
+            use std::collections::HashMap;
             let mut map = HashMap::new();
             for $p in $iter {
                 map.insert($key, $val);
@@ -200,6 +200,7 @@ macro_rules! c {
 
     ($key:expr => $val:expr, for $i:ident in $iter:expr) => (
         {
+            use std::collections::HashMap;
             let mut map = HashMap::new();
             for $i in $iter {
                 map.insert($key, $val);
@@ -209,138 +210,136 @@ macro_rules! c {
     );
 }
 
-
-#[test]
-fn simple_comprehension() {
-    let squares: Vec<usize> = c![x*x, for x in 0..10];
-    assert_eq!(squares, vec![0, 1, 4, 9, 16, 25, 36, 49, 64, 81]);
-}
-
-#[test]
-fn filter_comprehension() {
-    let squares = c![x*x, for x in 0..10, if x % 2 == 0];
-    assert_eq!(squares, vec![0, 4, 16, 36, 64]);
-}
-
-#[test]
-fn simple_nested_comprehension() {
-    let nested = vec![vec![1,2,3], vec![4,5,6], vec![7,8,9]];
-    let flat: Vec<usize> = c![x, for x in y, for y in nested];
-    assert_eq!(flat, vec![1, 2, 3, 4, 5, 6, 7, 8, 9]);
-}
-
-#[test]
-fn filter_nested_comprehension() {
-    let nested = vec![vec![1,2,3], vec![4,5,6], vec![7,8,9]];
-    let even_flat: Vec<usize> = c![x, for x in y, for y in nested, if x % 2 == 0];
-    assert_eq!(even_flat, vec![2, 4, 6, 8]);
-}
-
-
-#[test]
-fn vector_to_iter_comprehension() {
-    let vec: Vec<i32> = vec![-4, -2, 0, 2, 4];
-    let output: Vec<i32> = c![x*2, for x in vec.iter()];
-    assert_eq!(output, vec![-8, -4, 0, 4, 8]);
-}
-
-#[test]
-fn filter_comprehension_two() {
-    let vec: Vec<i32> = vec![-4, -2, 0, 2, 4];
-    let output: Vec<i32> = c![x, for x in vec.iter(), if *x >= 0i32];
-    assert_eq!(output, vec![0, 2, 4]);
-}
-
-#[test]
-fn apply_function_comprehension() {
-    let vec: Vec<i32> = vec![-4, -2, 0, 2, 4];
-    let output: Vec<i32> = c![x.abs(), for x in vec.iter()];
-    assert_eq!(output, vec![4, 2, 0, 2, 4]);
-}
-
-#[test]
-fn apply_user_defined_function() {
-    fn square(x:i32) -> i32 {
-            x*x
+#[cfg(test)]
+mod tests {
+    use std::collections::HashMap;
+    #[test]
+    fn simple_comprehension() {
+        let squares: Vec<usize> = c![x*x, for x in 0..10];
+        assert_eq!(squares, vec![0, 1, 4, 9, 16, 25, 36, 49, 64, 81]);
     }
 
-    let vec: Vec<i32> = vec![-4, -2, 0, 2, 4];
-    let squares: Vec<i32> = c![square(x), for x in vec];
-    assert_eq!(squares, vec![16, 4, 0, 4, 16]);
+    #[test]
+    fn filter_comprehension() {
+        let squares = c![x*x, for x in 0..10, if x % 2 == 0];
+        assert_eq!(squares, vec![0, 4, 16, 36, 64]);
+    }
 
-}
+    #[test]
+    fn simple_nested_comprehension() {
+        let nested = vec![vec![1, 2, 3], vec![4, 5, 6], vec![7, 8, 9]];
+        let flat: Vec<usize> = c![x, for x in y, for y in nested];
+        assert_eq!(flat, vec![1, 2, 3, 4, 5, 6, 7, 8, 9]);
+    }
 
-#[test]
-fn hashmap_comprehension() {
-    let v = vec!["one", "two", "three"];
-    let map = c!{key => key.to_uppercase(), for key in v};
-    let mut expected: HashMap<&str, String> = HashMap::new();
-    expected.insert("one", String::from("ONE"));
-    expected.insert("two", String::from("TWO"));
-    expected.insert("three", String::from("THREE"));
-
-    assert_eq!(map, expected);
-
-}
-
-#[test]
-fn hashmap_comprehension_two() {
-    let v = vec!["one", "two", "three"];
-    let map = c!{format!("{}-true", key) => key.to_uppercase(), for key in v};
-    let mut expected: HashMap<String, String> = HashMap::new();
-    expected.insert(String::from("one-true"), String::from("ONE"));
-    expected.insert(String::from("two-true"), String::from("TWO"));
-    expected.insert(String::from("three-true"), String::from("THREE"));
-
-    assert_eq!(map, expected);
-
-}
-
-#[test]
-fn hashmap_comprehension_three () {
-    let v: Vec<(String, i32)> = vec![(String::from("one"), 1), (String::from("two"), 2), (String::from("three"), 3)];
-    let map = c!{key => val, for (key, val) in v};
-
-    let mut expected: HashMap<String, i32> = HashMap::new();
-    expected.insert(String::from("one"), 1);
-    expected.insert(String::from("two"), 2);
-    expected.insert(String::from("three"), 3);
-
-    assert_eq!(map, expected);
-
-}
+    #[test]
+    fn filter_nested_comprehension() {
+        let nested = vec![vec![1, 2, 3], vec![4, 5, 6], vec![7, 8, 9]];
+        let even_flat: Vec<usize> = c![x, for x in y, for y in nested, if x % 2 == 0];
+        assert_eq!(even_flat, vec![2, 4, 6, 8]);
+    }
 
 
-#[test]
-fn hashmap_comprehension_four () {
-    let v: Vec<(&str, i32)> = vec![("one", 1), ("two", 2), ("three", 3)];
-    let map = c!{key => val, for (key, val) in v};
+    #[test]
+    fn vector_to_iter_comprehension() {
+        let vec: Vec<i32> = vec![-4, -2, 0, 2, 4];
+        let output: Vec<i32> = c![x*2, for x in vec.iter()];
+        assert_eq!(output, vec![-8, -4, 0, 4, 8]);
+    }
 
-    let mut expected: HashMap<&str, i32> = HashMap::new();
-    expected.insert("one", 1);
-    expected.insert("two", 2);
-    expected.insert("three", 3);
+    #[test]
+    fn filter_comprehension_two() {
+        let vec: Vec<i32> = vec![-4, -2, 0, 2, 4];
+        let output: Vec<i32> = c![x, for x in vec.iter(), if *x >= 0i32];
+        assert_eq!(output, vec![0, 2, 4]);
+    }
 
-    assert_eq!(map, expected);
+    #[test]
+    fn apply_function_comprehension() {
+        let vec: Vec<i32> = vec![-4, -2, 0, 2, 4];
+        let output: Vec<i32> = c![x.abs(), for x in vec.iter()];
+        assert_eq!(output, vec![4, 2, 0, 2, 4]);
+    }
 
-}
+    #[test]
+    fn apply_user_defined_function() {
+        fn square(x: i32) -> i32 {
+            x * x
+        }
 
-#[test]
-fn hashmap_from_iter () {
-    let map = c!{*key => key*key, for key in vec![1,2].iter()};
-    let mut e: HashMap<i32, i32> = HashMap::new();
-    e.insert(1, 1);
-    e.insert(2, 4);
+        let vec: Vec<i32> = vec![-4, -2, 0, 2, 4];
+        let squares: Vec<i32> = c![square(x), for x in vec];
+        assert_eq!(squares, vec![16, 4, 0, 4, 16]);
+    }
 
-    assert_eq!(map, e);
-}
+    #[test]
+    fn hashmap_comprehension() {
+        let v = vec!["one", "two", "three"];
+        let map = c! {key => key.to_uppercase(), for key in v};
+        let mut expected: HashMap<&str, String> = HashMap::new();
+        expected.insert("one", String::from("ONE"));
+        expected.insert("two", String::from("TWO"));
+        expected.insert("three", String::from("THREE"));
 
-#[test]
-fn hashmap_from_range () {
-    let map = c!{key => key*key, for key in 1..3};
-    let mut e: HashMap<i32, i32> = HashMap::new();
-    e.insert(1, 1);
-    e.insert(2, 4);
+        assert_eq!(map, expected);
+    }
 
-    assert_eq!(map, e);
+    #[test]
+    fn hashmap_comprehension_two() {
+        let v = vec!["one", "two", "three"];
+        let map = c! {format!("{}-true", key) => key.to_uppercase(), for key in v};
+        let mut expected: HashMap<String, String> = HashMap::new();
+        expected.insert(String::from("one-true"), String::from("ONE"));
+        expected.insert(String::from("two-true"), String::from("TWO"));
+        expected.insert(String::from("three-true"), String::from("THREE"));
+
+        assert_eq!(map, expected);
+    }
+
+    #[test]
+    fn hashmap_comprehension_three() {
+        let v: Vec<(String, i32)> = vec![(String::from("one"), 1), (String::from("two"), 2), (String::from("three"), 3)];
+        let map = c! {key => val, for (key, val) in v};
+
+        let mut expected: HashMap<String, i32> = HashMap::new();
+        expected.insert(String::from("one"), 1);
+        expected.insert(String::from("two"), 2);
+        expected.insert(String::from("three"), 3);
+
+        assert_eq!(map, expected);
+    }
+
+
+    #[test]
+    fn hashmap_comprehension_four() {
+        let v: Vec<(&str, i32)> = vec![("one", 1), ("two", 2), ("three", 3)];
+        let map = c! {key => val, for (key, val) in v};
+
+        let mut expected: HashMap<&str, i32> = HashMap::new();
+        expected.insert("one", 1);
+        expected.insert("two", 2);
+        expected.insert("three", 3);
+
+        assert_eq!(map, expected);
+    }
+
+    #[test]
+    fn hashmap_from_iter() {
+        let map = c! {*key => key*key, for key in vec![1,2].iter()};
+        let mut e: HashMap<i32, i32> = HashMap::new();
+        e.insert(1, 1);
+        e.insert(2, 4);
+
+        assert_eq!(map, e);
+    }
+
+    #[test]
+    fn hashmap_from_range() {
+        let map = c! {key => key*key, for key in 1..3};
+        let mut e: HashMap<i32, i32> = HashMap::new();
+        e.insert(1, 1);
+        e.insert(2, 4);
+
+        assert_eq!(map, e);
+    }
 }
