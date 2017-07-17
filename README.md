@@ -119,7 +119,7 @@ let map = c!{*key => key*key, for key in vec![1,2].iter()};
 // conditional hashmap comprehension
 
 let v: Vec<(&str, i32)> = vec![("one", 1), ("two", 2), ("three", 3)];
-let map = c! {key => val, for (key, val) in v, if val == 1 || val == 2};
+let map = c!{key => val, for (key, val) in v, if val == 1 || val == 2};
 
 let mut expected: HashMap<&str, i32> = HashMap::new();
 expected.insert("one", 1);
@@ -132,7 +132,7 @@ assert_eq!(map, expected);
 // conditional hashmap comprehension from an Iterator
 // NOTE: we perform deferencing when using values
 
-let map = c! {*key => key*key, for key in vec![1,2].iter(), if *key % 2 == 0};
+let map = c!{*key => key*key, for key in vec![1,2].iter(), if *key % 2 == 0};
 let mut e: HashMap<i32, i32> = HashMap::new();
 e.insert(2, 4);
 

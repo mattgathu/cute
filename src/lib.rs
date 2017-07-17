@@ -303,7 +303,7 @@ mod tests {
     #[test]
     fn hashmap_comprehension() {
         let v = vec!["one", "two", "three"];
-        let map = c! {key => key.to_uppercase(), for key in v};
+        let map = c!{key => key.to_uppercase(), for key in v};
         let mut expected: HashMap<&str, String> = HashMap::new();
         expected.insert("one", String::from("ONE"));
         expected.insert("two", String::from("TWO"));
@@ -315,7 +315,7 @@ mod tests {
     #[test]
     fn hashmap_comprehension_two() {
         let v = vec!["one", "two", "three"];
-        let map = c! {format!("{}-true", key) => key.to_uppercase(), for key in v};
+        let map = c!{format!("{}-true", key) => key.to_uppercase(), for key in v};
         let mut expected: HashMap<String, String> = HashMap::new();
         expected.insert(String::from("one-true"), String::from("ONE"));
         expected.insert(String::from("two-true"), String::from("TWO"));
@@ -327,7 +327,7 @@ mod tests {
     #[test]
     fn hashmap_comprehension_three() {
         let v: Vec<(String, i32)> = vec![(String::from("one"), 1), (String::from("two"), 2), (String::from("three"), 3)];
-        let map = c! {key => val, for (key, val) in v};
+        let map = c!{key => val, for (key, val) in v};
 
         let mut expected: HashMap<String, i32> = HashMap::new();
         expected.insert(String::from("one"), 1);
@@ -341,7 +341,7 @@ mod tests {
     #[test]
     fn hashmap_tuple_comprehension() {
         let v: Vec<(&str, i32)> = vec![("one", 1), ("two", 2), ("three", 3)];
-        let map = c! {key => val, for (key, val) in v};
+        let map = c!{key => val, for (key, val) in v};
 
         let mut expected: HashMap<&str, i32> = HashMap::new();
         expected.insert("one", 1);
@@ -354,7 +354,7 @@ mod tests {
     #[test]
     fn conditional_hashmap_tuple_comprehension() {
         let v: Vec<(&str, i32)> = vec![("one", 1), ("two", 2), ("three", 3)];
-        let map = c! {key => val, for (key, val) in v, if val == 1 || val == 2};
+        let map = c!{key => val, for (key, val) in v, if val == 1 || val == 2};
 
         let mut expected: HashMap<&str, i32> = HashMap::new();
         expected.insert("one", 1);
@@ -365,7 +365,7 @@ mod tests {
 
     #[test]
     fn hashmap_from_iter() {
-        let map = c! {*key => key*key, for key in vec![1,2].iter()};
+        let map = c!{*key => key*key, for key in vec![1,2].iter()};
         let mut e: HashMap<i32, i32> = HashMap::new();
         e.insert(1, 1);
         e.insert(2, 4);
@@ -375,7 +375,7 @@ mod tests {
 
     #[test]
     fn conditional_hashmap_from_iter() {
-        let map = c! {*key => key*key, for key in vec![1,2].iter(), if *key % 2 == 0};
+        let map = c!{*key => key*key, for key in vec![1,2].iter(), if *key % 2 == 0};
         let mut e: HashMap<i32, i32> = HashMap::new();
         e.insert(2, 4);
 
@@ -384,7 +384,7 @@ mod tests {
 
     #[test]
     fn hashmap_from_range() {
-        let map = c! {key => key*key, for key in 1..3};
+        let map = c!{key => key*key, for key in 1..3};
         let mut e: HashMap<i32, i32> = HashMap::new();
         e.insert(1, 1);
         e.insert(2, 4);
@@ -394,7 +394,7 @@ mod tests {
 
     #[test]
     fn conditional_hashmap_from_range() {
-        let map = c! {key => key*key, for key in 1..6, if key % 2 == 1};
+        let map = c!{key => key*key, for key in 1..6, if key % 2 == 1};
         let mut e: HashMap<i32, i32> = HashMap::new();
         e.insert(1, 1);
         e.insert(3, 9);
