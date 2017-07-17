@@ -1,6 +1,6 @@
 [package]
 name = "cute"
-version = "0.2.0"
+version = "0.2.1"
 authors = ["Matt Gathu <mattgathu@gmail.com>"]
 
 description = "A macro for Python-esque comprehensions"
