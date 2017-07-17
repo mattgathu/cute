@@ -110,15 +110,27 @@
 //! assert_eq!(squares, vec![16, 4, 0, 4, 16]);
 //! ```
 //!
-//! Simple Hashmap creation Comprehension
+//! Hashmap Comprehensions
 //!
 //! ```
 //! let v = vec!["one", "two", "three"];
-//! let map = c![key, key.to_uppercase(), for key in v];
+//! let map = c!{key => key.to_uppercase(), for key in v};
 //! let mut expected: HashMap<&str, String> = HashMap::new();
 //! expected.insert("one", String::from("ONE"));
 //! expected.insert("two", String::from("TWO"));
 //! expected.insert("three", String::from("THREE"));
+//!
+//! assert_eq!(map, expected);
+//! ```
+//!
+//! ```
+//! let v: Vec<(&str, i32)> = vec![("one", 1), ("two", 2), ("three", 3)];
+//! let map = c!{key => val, for (key, val) in v};
+//!
+//! let mut expected: HashMap<&str, i32> = HashMap::new();
+//! expected.insert("one", 1);
+//! expected.insert("two", 2);
+//! expected.insert("three", 3);
 //!
 //! assert_eq!(map, expected);
 //! ```
@@ -176,7 +188,17 @@ macro_rules! c {
         }
     );
 
-    ($key:expr, $val:expr, for $i:ident in $iter:expr) => (
+    ($key:expr => $val:expr, for $p:pat in $iter:expr) => (
+        {
+            let mut map = HashMap::new();
+            for $p in $iter {
+                map.insert($key, $val);
+            }
+            map
+        }
+    );
+
+    ($key:expr => $val:expr, for $i:ident in $iter:expr) => (
         {
             let mut map = HashMap::new();
             for $i in $iter {
@@ -251,11 +273,53 @@ fn apply_user_defined_function() {
 #[test]
 fn hashmap_comprehension() {
     let v = vec!["one", "two", "three"];
-    let map = c![key, key.to_uppercase(), for key in v];
+    let map = c!{key => key.to_uppercase(), for key in v};
     let mut expected: HashMap<&str, String> = HashMap::new();
     expected.insert("one", String::from("ONE"));
     expected.insert("two", String::from("TWO"));
     expected.insert("three", String::from("THREE"));
+
+    assert_eq!(map, expected);
+
+}
+
+#[test]
+fn hashmap_comprehension_two() {
+    let v = vec!["one", "two", "three"];
+    let map = c!{format!("{}-true", key) => key.to_uppercase(), for key in v};
+    let mut expected: HashMap<String, String> = HashMap::new();
+    expected.insert(String::from("one-true"), String::from("ONE"));
+    expected.insert(String::from("two-true"), String::from("TWO"));
+    expected.insert(String::from("three-true"), String::from("THREE"));
+
+    assert_eq!(map, expected);
+
+}
+
+#[test]
+fn hashmap_comprehension_three () {
+    let v: Vec<(String, i32)> = vec![(String::from("one"), 1), (String::from("two"), 2), (String::from("three"), 3)];
+    let map = c!{key => val, for (key, val) in v};
+
+    let mut expected: HashMap<String, i32> = HashMap::new();
+    expected.insert(String::from("one"), 1);
+    expected.insert(String::from("two"), 2);
+    expected.insert(String::from("three"), 3);
+
+    assert_eq!(map, expected);
+
+}
+
+
+#[test]
+fn hashmap_comprehension_four () {
+    let v: Vec<(&str, i32)> = vec![("one", 1), ("two", 2), ("three", 3)];
+    let map = c!{key => val, for (key, val) in v};
+
+    let mut expected: HashMap<&str, i32> = HashMap::new();
+    expected.insert("one", 1);
+    expected.insert("two", 2);
+    expected.insert("three", 3);
 
     assert_eq!(map, expected);
 
