@@ -324,3 +324,23 @@ fn hashmap_comprehension_four () {
     assert_eq!(map, expected);
 
 }
+
+#[test]
+fn hashmap_from_iter () {
+    let map = c!{*key => key*key, for key in vec![1,2].iter()};
+    let mut e: HashMap<i32, i32> = HashMap::new();
+    e.insert(1, 1);
+    e.insert(2, 4);
+
+    assert_eq!(map, e);
+}
+
+#[test]
+fn hashmap_from_range () {
+    let map = c!{key => key*key, for key in 1..3};
+    let mut e: HashMap<i32, i32> = HashMap::new();
+    e.insert(1, 1);
+    e.insert(2, 4);
+
+    assert_eq!(map, e);
+}

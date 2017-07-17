@@ -15,6 +15,8 @@ Macro for Python-esque list comprehensions in Rust.
  squares = [x*x for x in range(10)]
 
  even_squares = [x*x for x in range(10) if x % 2 == 0]
+
+ squares_dict = {key:key*key for key in range(10)}
  ```
 
  # c! Syntax
@@ -23,6 +25,8 @@ Macro for Python-esque list comprehensions in Rust.
  let squares = c![x*x, for x in 0..10];
 
  let even_squares = c![x*x, for x in 0..10, if x % 2 == 0];
+ 
+ let squares_hashmap = c!{key => key*key, for key in 0..10};
 
  ```
 
@@ -92,5 +96,22 @@ Macro for Python-esque list comprehensions in Rust.
  let squares: Vec<i32> = c![square(x), for x in vec];
  assert_eq!(squares, vec![16, 4, 0, 4, 16]);
  ```
+ 
+HashMap Comprehensions (Dictionary Comprehensions)
+
+```rust
+// simple hashmap comprehension
+
+let squares_hashmap = c!{key => key*key, for key in 0..10};
+
+```
+
+```rust
+// hashmap comprehension from an Iterator
+// NOTE: we have perform dereferencing.. *key
+
+let map = c!{*key => key*key, for key in vec![1,2].iter()};
+
+```
 
 
