@@ -189,6 +189,36 @@ macro_rules! c {
         }
     );
 
+    ($exp:expr, for $i:ident in $iter:expr, for $i2:ident in $iter2:expr, for $i3:ident in $iter3:expr, if $cond:expr) => (
+        {
+            let mut r = vec![];
+            for $i in $iter {
+                for $i2 in $iter2 {
+                    for $i3 in $iter3 {
+                        if $cond {
+                            r.push($exp);
+                        }
+                    }
+                }
+            }
+            r
+        }
+    );
+
+    ($exp:expr, for $i:ident in $iter:expr, for $i2:ident in $iter2:expr, for $i3:ident in $iter3:expr) => (
+        {
+            let mut r = vec![];
+            for $i in $iter {
+                for $i2 in $iter2 {
+                    for $i3 in $iter3 {
+                        r.push($exp);
+                    }
+                }
+            }
+            r
+        }
+    );
+
     ($key:expr => $val:expr, for $p:pat in $iter:expr) => (
         {
             use std::collections::HashMap;
@@ -265,6 +295,20 @@ mod tests {
         let nested = vec![vec![1, 2, 3], vec![4, 5, 6], vec![7, 8, 9]];
         let even_flat: Vec<usize> = c![x, for x in y, for y in nested, if x % 2 == 0];
         assert_eq!(even_flat, vec![2, 4, 6, 8]);
+    }
+
+    #[test]
+    fn repeated_nested_comprehension() {
+        let n: i32 = 10;
+        let triples = c![(x,y, z), for x in 1..n+1, for y in x..n+1, for z in y..n+1, if x.pow(2) + y.pow(2) == z.pow(2)];
+        println!("{:?}", triples);
+        assert_eq!(triples, vec![(3, 4, 5), (6, 8, 10)]);
+    }
+
+    #[test]
+    fn iter_nested_comprehension() {
+        let x = c![(x, y), for x in 0..2u8, for y in vec!['a', 'b']];
+        assert_eq!(x, vec![(0, 'a'), (1, 'a'), (0, 'b'), (1, 'b')]);
     }
 
 
