@@ -370,7 +370,8 @@ mod tests {
 
     #[test]
     fn hashmap_comprehension_three() {
-        let v: Vec<(String, i32)> = vec![(String::from("one"), 1), (String::from("two"), 2), (String::from("three"), 3)];
+        let v: Vec<(String, i32)> =
+            vec![(String::from("one"), 1), (String::from("two"), 2), (String::from("three"), 3)];
         let map = c!{key => val, for (key, val) in v};
 
         let mut expected: HashMap<String, i32> = HashMap::new();
