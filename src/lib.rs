@@ -52,6 +52,19 @@
 //! # }
 //! ```
 //!
+//! Comprehensions over tuples
+//!
+//! ```
+//! # #[macro_use(c)]
+//! # extern crate cute;
+//! # fn main() {
+//! let v1 = vec![1, 2, 3];
+//! let v2 = vec![10, 11, 12];
+//! let sums = c![x+y, for (x,y) in v1.iter().zip(v2)];
+//! assert_eq!(sums, vec![11, 13, 15]);
+//! # }
+//! ```
+//!
 //! Nested Comprehensions
 //!
 //! ```
