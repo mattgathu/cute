@@ -5,7 +5,7 @@
 //! allowing for conditionals and nested comprehensions.
 //!
 //! # Python Syntax
-//! ```
+//! ```python
 //! squares = [x*x for x in range(10)]
 //!
 //! even_squares = [x*x for x in range(10) if x % 2 == 0]
@@ -17,13 +17,13 @@
 //! ```
 //! #[macro_use(c)]
 //! extern crate cute;
-//!
+//! # fn main() { // needed to include macro 
 //! let squares = c![x*x, for x in 0..10];
 //!
 //! let even_squares = c![x*x, for x in 0..10, if x % 2 == 0];
 //!
 //! let squares_hashmap = c!{key => key*key, for key in 0..10};
-//!
+//! # }
 //! ```
 //!
 //! `c!`'s has the comprehension's parts, comma-separated.
@@ -33,54 +33,86 @@
 //! Simple comprehension
 //!
 //! ```
-//! let v = [1,2,3,4];
+//! # #[macro_use(c)]
+//! # extern crate cute;
+//! # // otherwise its implicitly put in a function, so you can't `use`
+//! # fn main() {
+//! let v = vec![1,2,3,4];
 //! let v_squared = c![x*x, for x in v];
-//!
+//! # }
 //! ```
 //! Conditional filtering
 //!
 //! ```
+//! # #[macro_use(c)]
+//! # extern crate cute;
+//! # fn main() {
 //! let squares = c![x*x, for x in 0..10, if x % 2 == 0];
 //! assert_eq!(squares, vec![0, 4, 16, 36, 64]);
+//! # }
 //! ```
 //!
 //! Nested Comprehensions
 //!
 //! ```
+//! # #[macro_use(c)]
+//! # extern crate cute;
+//! # fn main() {
 //! let nested = vec![vec![1,2,3], vec![4,5,6], vec![7,8,9]];
 //! let flat: Vec<usize> = c![x, for x in y, for y in nested];
 //! assert_eq!(flat, vec![1, 2, 3, 4, 5, 6, 7, 8, 9]);
+//! # }
 //! ```
 //!
 //! ```
+//! # #[macro_use(c)]
+//! # extern crate cute;
+//! # fn main() {
 //! let nested = vec![vec![1,2,3], vec![4,5,6], vec![7,8,9]];
 //! let even_flat: Vec<usize> = c![x, for x in y, for y in nested, if x % 2 == 0];
 //! assert_eq!(even_flat, vec![2, 4, 6, 8]);
+//! # }
 //! ```
 //!
 //! Comprehensions over Iterators
 //!
 //! ```
+//! # #[macro_use(c)]
+//! # extern crate cute;
+//! # fn main() {
 //! let vec: Vec<i32> = vec![-4, -2, 0, 2, 4];
 //! let output: Vec<i32> = c![x*2, for x in vec.iter()];
 //! assert_eq!(output, vec![-8, -4, 0, 4, 8]);
+//! # }
 //! ```
 //!
 //! ```
+//! # #[macro_use(c)]
+//! # extern crate cute;
+//! # fn main() { 
 //! let vec: Vec<i32> = vec![-4, -2, 0, 2, 4];
 //! let output: Vec<i32> = c![x, for x in vec.iter(), if *x >= 0i32];
 //! assert_eq!(output, vec![0, 2, 4]);
+//! # }
 //! ```
 //!
+
 //! Function Application
 //!
 //! ```
+//! # #[macro_use(c)]
+//! # extern crate cute;
+//! # fn main() {
 //! let vec: Vec<i32> = vec![-4, -2, 0, 2, 4];
 //! let output: Vec<i32> = c![x.abs(), for x in vec.iter()];
 //! assert_eq!(output, vec![4, 2, 0, 2, 4]);
+//! # }
 //! ```
 //!
 //! ```
+//! # #[macro_use(c)]
+//! # extern crate cute;
+//! # fn main() { 
 //! fn square(x:i32) -> i32 {
 //!        x*x
 //! }
@@ -88,11 +120,16 @@
 //! let vec: Vec<i32> = vec![-4, -2, 0, 2, 4];
 //! let squares: Vec<i32> = c![square(x), for x in vec];
 //! assert_eq!(squares, vec![16, 4, 0, 4, 16]);
+//! # }
 //! ```
 //!
 //! Hashmap Comprehensions
 //!
 //! ```
+//! # #[macro_use(c)]
+//! # extern crate cute;
+//! # use std::collections::HashMap;
+//! # fn main() {
 //! let v = vec!["one", "two", "three"];
 //! let map = c!{key => key.to_uppercase(), for key in v};
 //!
@@ -102,9 +139,14 @@
 //! expected.insert("three", String::from("THREE"));
 //!
 //! assert_eq!(map, expected);
+//! # }
 //! ```
 //!
 //! ```
+//! # #[macro_use(c)]
+//! # extern crate cute;
+//! # use std::collections::HashMap;
+//! # fn main() {
 //! let v: Vec<(&str, i32)> = vec![("one", 1), ("two", 2), ("three", 3)];
 //! let map = c!{key => val, for (key, val) in v};
 //!
@@ -114,9 +156,14 @@
 //! expected.insert("three", 3);
 //!
 //! assert_eq!(map, expected);
+//! # }
 //! ```
 //!
 //! ```
+//! # #[macro_use(c)]
+//! # extern crate cute;
+//! # use std::collections::HashMap;
+//! # fn main() {
 //! // conditional hashmap comprehension
 //! let v: Vec<(&str, i32)> = vec![("one", 1), ("two", 2), ("three", 3)];
 //! let map = c! {key => val, for (key, val) in v, if val == 1 || val == 2};
@@ -126,15 +173,21 @@
 //! expected.insert("two", 2);
 //!
 //! assert_eq!(map, expected);
+//! # }
 //! ```
 //!
 //! ```
+//! # #[macro_use(c)]
+//! # extern crate cute;
+//! # use std::collections::HashMap;
+//! # fn main() {
 //! // conditional hashmap comprehension from an Iterator
 //! let map = c! {*key => key*key, for key in vec![1,2].iter(), if *key % 2 == 0};
 //! let mut e: HashMap<i32, i32> = HashMap::new();
 //! e.insert(2, 4);
 //!
 //! assert_eq!(map, e);
+//! # }
 //! ```
 
 
