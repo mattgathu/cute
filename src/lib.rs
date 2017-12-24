@@ -138,23 +138,24 @@
 //! ```
 
 
+
 #[macro_export]
 macro_rules! c {
 
-    ($exp:expr, for $i:ident in $iter:expr) => (
+    ($exp:expr, for $p:pat in $iter:expr) => (
         {
             let mut r = vec![];
-            for $i in $iter {
+            for $p in $iter {
                 r.push($exp);
             }
             r
         }
     );
 
-    ($exp:expr, for $i:ident in $iter:expr, if $cond:expr) => (
+    ($exp:expr, for $p:pat in $iter:expr, if $cond:expr) => (
         {
             let mut r = vec![];
-            for $i in $iter {
+            for $p in $iter {
                 if $cond {
                     r.push($exp.clone());
                 }
@@ -163,11 +164,11 @@ macro_rules! c {
         }
     );
 
-    ($exp:expr, for $i:ident in $iter:expr, for $i2:ident in $iter2:expr) => (
+    ($exp:expr, for $p:pat in $iter:expr, for $p2:pat in $iter2:expr) => (
         {
             let mut r = vec![];
-            for $i2 in $iter2 {
-                for $i in $iter {
+            for $p2 in $iter2 {
+                for $p in $iter {
                     r.push($exp);
                 }
             }
@@ -175,11 +176,11 @@ macro_rules! c {
         }
     );
 
-    ($exp:expr, for $i:ident in $iter:expr, for $i2:ident in $iter2:expr, if $cond:expr) => (
+    ($exp:expr, for $p:pat in $iter:expr, for $p2:pat in $iter2:expr, if $cond:expr) => (
         {
             let mut r = vec![];
-            for $i2 in $iter2 {
-                for $i in $iter {
+            for $p2 in $iter2 {
+                for $p in $iter {
                     if $cond{
                         r.push($exp);
                     }
@@ -189,12 +190,12 @@ macro_rules! c {
         }
     );
 
-    ($exp:expr, for $i:ident in $iter:expr, for $i2:ident in $iter2:expr, for $i3:ident in $iter3:expr, if $cond:expr) => (
+    ($exp:expr, for $p:pat in $iter:expr, for $p2:pat in $iter2:expr, for $p3:pat in $iter3:expr, if $cond:expr) => (
         {
             let mut r = vec![];
-            for $i in $iter {
-                for $i2 in $iter2 {
-                    for $i3 in $iter3 {
+            for $p in $iter {
+                for $p2 in $iter2 {
+                    for $p3 in $iter3 {
                         if $cond {
                             r.push($exp);
                         }
@@ -205,12 +206,12 @@ macro_rules! c {
         }
     );
 
-    ($exp:expr, for $i:ident in $iter:expr, for $i2:ident in $iter2:expr, for $i3:ident in $iter3:expr) => (
+    ($exp:expr, for $p:pat in $iter:expr, for $p2:pat in $iter2:expr, for $p3:pat in $iter3:expr) => (
         {
             let mut r = vec![];
-            for $i in $iter {
-                for $i2 in $iter2 {
-                    for $i3 in $iter3 {
+            for $p in $iter {
+                for $p2 in $iter2 {
+                    for $p3 in $iter3 {
                         r.push($exp);
                     }
                 }
@@ -278,9 +279,21 @@ mod tests {
     }
 
     #[test]
+    fn tuple_comprehension() {
+        let pairs = c![(x,y), for (x, y) in (0..3).zip(100..103)];
+        assert_eq!(pairs, vec![(0, 100), (1, 101), (2, 102)]);
+    }
+
+    #[test]
     fn filter_comprehension() {
         let squares = c![x*x, for x in 0..10, if x % 2 == 0];
         assert_eq!(squares, vec![0, 4, 16, 36, 64]);
+    }
+
+    #[test]
+    fn filter_tuple_comprehension() {
+        let matches = c![x, for (x,y) in vec![0,1,2].iter().zip(vec![0,3,2]), if x == &y];
+        assert_eq!(matches, vec![0, 2]);
     }
 
     #[test]
