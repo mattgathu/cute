@@ -190,19 +190,23 @@
 //! # }
 //! ```
 
-
 #[macro_export]
 macro_rules! c {
 
-    ($exp:expr, for $i:ident in $iter:expr) => (
-        {
-            let mut r = vec![];
-            for $i in $iter {
-                r.push($exp);
-            }
-            r
-        }
-    );
+     ($e:expr $(, for $i:ident in $iter:expr)+) => {{
+        let mut r = vec![];
+        c!(@loop r.push($e) $(, for $i in $iter)*);
+        r
+    }};
+
+    (@loop $e:expr, for $i:ident in $iter:expr $(, for $j:ident in $rest:expr)*) => {
+        c!(@loop for $i in $iter { $e } $(, for $j in $rest)*);
+    };
+
+   (@loop $e:expr) => {
+        $e
+    };
+
 
     ($exp:expr, for $i:ident in $iter:expr, if $cond:expr) => (
         {
@@ -216,17 +220,6 @@ macro_rules! c {
         }
     );
 
-    ($exp:expr, for $i:ident in $iter:expr, for $i2:ident in $iter2:expr) => (
-        {
-            let mut r = vec![];
-            for $i2 in $iter2 {
-                for $i in $iter {
-                    r.push($exp);
-                }
-            }
-            r
-        }
-    );
 
     ($exp:expr, for $i:ident in $iter:expr, for $i2:ident in $iter2:expr, if $cond:expr) => (
         {
@@ -251,20 +244,6 @@ macro_rules! c {
                         if $cond {
                             r.push($exp);
                         }
-                    }
-                }
-            }
-            r
-        }
-    );
-
-    ($exp:expr, for $i:ident in $iter:expr, for $i2:ident in $iter2:expr, for $i3:ident in $iter3:expr) => (
-        {
-            let mut r = vec![];
-            for $i in $iter {
-                for $i2 in $iter2 {
-                    for $i3 in $iter3 {
-                        r.push($exp);
                     }
                 }
             }
@@ -364,7 +343,6 @@ mod tests {
         assert_eq!(x, vec![(0, 'a'), (1, 'a'), (0, 'b'), (1, 'b')]);
     }
 
-
     #[test]
     fn vector_to_iter_comprehension() {
         let vec: Vec<i32> = vec![-4, -2, 0, 2, 4];
@@ -423,8 +401,11 @@ mod tests {
 
     #[test]
     fn hashmap_comprehension_three() {
-        let v: Vec<(String, i32)> =
-            vec![(String::from("one"), 1), (String::from("two"), 2), (String::from("three"), 3)];
+        let v: Vec<(String, i32)> = vec![
+            (String::from("one"), 1),
+            (String::from("two"), 2),
+            (String::from("three"), 3),
+        ];
         let map = c!{key => val, for (key, val) in v};
 
         let mut expected: HashMap<String, i32> = HashMap::new();
@@ -434,7 +415,6 @@ mod tests {
 
         assert_eq!(map, expected);
     }
-
 
     #[test]
     fn hashmap_tuple_comprehension() {
