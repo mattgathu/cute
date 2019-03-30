@@ -2,9 +2,7 @@
 name = "cute"
 version = "0.3.0"
 authors = ["Matt Gathu <mattgathu@gmail.com>"]
-
 description = "A macro for Python-esque comprehensions"
-
 documentation = "https://docs.rs/cute"
 homepage = "https://github.com/mattgathu/cute"
 repository = "https://github.com/mattgathu/cute"
@@ -12,6 +10,7 @@ readme = "README.md"
 keywords = ["macro", "comprehensions", "python", "list", "hashmaps"]
 categories = ["rust-patterns"]
 license = "MIT"
+edition = "2018"
 
 [badges]
 travis-ci = { repository = "mattgathu/cute"}
